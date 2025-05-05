@@ -41,7 +41,7 @@ for x = 1:X
             continue;
         end
         
-        if any(S(x,y,:)<=0, 'all')
+        if any(S(x,y,:)<=0, 'all') %Ends loop if any values are negative for a given x,y
             continue
         end
 
@@ -51,11 +51,12 @@ for x = 1:X
         D_vector = A\B; %Use MATLAB \ function to find least squares D vector
        
         % Forming diffusion tensor
-        D = [D_vector(1),D_vector(4),D_vector(5); D_vector(4), D_vector(2), D_vector(6); D_vector(5), D_vector(6), D_vector(3)]; %Arrange D values into 3x3 matrix as per guidelines
+        D = [D_vector(1) D_vector(4) D_vector(5); D_vector(4), D_vector(2), D_vector(6); D_vector(5), D_vector(6), D_vector(3)]; %Arrange D values into 3x3 matrix as per guidelines
         
         % Finding eigenvalues and eigenvectors
-        lambda = diag(D); %Retrieve diagonal of D which are its eigenvalues
-        
+        [EVec,EVal] = eig(D)
+        lambda = diag(EVal); %Retrieve diagonal of EVal which are D's eigenvalues
+      
         % Calculating MD, FA and PDD
         MD(x,y) = mean(lambda); % Enscribe average of eigenvalues before restarting loop.
 
@@ -64,8 +65,10 @@ end
 
 %% Plot mean diffusivity, fractional anisotropy and principal diffusion direction maps
 
+colormap(gray)
 
-imagesc(MD)
+
+imagesc(MD), axis image off
 
 
 
