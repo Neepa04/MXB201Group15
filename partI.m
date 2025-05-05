@@ -48,12 +48,18 @@ for x = 1:X
         end
 
         % Solving least squares problem
-        B = log (squeeze(S(x,y,:))./ S0(x,y)) / b;
+        B = log (squeeze(S(x,y,:))./ S0(x,y)) / b; %Find B
 
-        D = A\B
+        D_vector = A\B; %Use MATLAB \ function to find least squares D vector
+       
         % Forming diffusion tensor
+        D = [D_vector(1),D_vector(4),D_vector(5); D_vector(4), D_vector(2), D_vector(6); D_vector(5), D_vector(6), D_vector(3)]; %Arrange D values into 3x3 matrix as per guidelines
+        
         % Finding eigenvalues and eigenvectors
+        lambda = diag(D); %Retrieve diagonal of D which are its eigenvalues
+        
         % Calculating MD, FA and PDD
+        MD(x,y) = mean(lambda); % Enscribe average of eigenvalues before restarting loop.
 
     end
 end
