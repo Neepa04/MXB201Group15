@@ -48,7 +48,9 @@ for x = 1:X
         end
 
         % Solving least squares problem
-        B = log (S(x,y,:)./ S0(x,y)) / b;
+        B = log (squeeze(S(x,y,:))./ S0(x,y)) / b;
+
+        D = A\B
         % Forming diffusion tensor
         % Finding eigenvalues and eigenvectors
         % Calculating MD, FA and PDD
