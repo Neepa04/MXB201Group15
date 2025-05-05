@@ -37,7 +37,7 @@ for x = 1:X
         
         % Handling bad data 
         %S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable.)
-        if S0 =<0 %Skips to next loop if S0 is negative.
+        if S0 <= 0 %Skips to next loop if S0 is negative.
             continue
         end
 
@@ -46,7 +46,7 @@ for x = 1:X
             
             
             
-            A(x,y) = [x,y]
+            
 
 
 
