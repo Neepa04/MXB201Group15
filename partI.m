@@ -34,8 +34,15 @@ for x = 1:X
 
         % If not within the mask, skip the pixel
         if ~mask(x, y), continue; end
+        
+        % Handling bad data 
+        if S0 =<0
+            continue
+        end
+A(x,y) = [x,y]
 
-        % Handling bad data
+
+
         
         % Solving least squares problem
         % Forming diffusion tensor
