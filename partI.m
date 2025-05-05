@@ -40,11 +40,9 @@ for x = 1:X
         if S0(x,y) <= 0 %Skips to next loop if S0 is negative.
             continue;
         end
-        Measurement_count = size(S,3);
-        for i = 1:Measurement_count
-            if S(x,y,i) <= 0
-                continue;
-            end
+        
+        if any(S(x,y,:)<=0, 'all')
+            continue
         end
 
         % Solving least squares problem
