@@ -36,10 +36,17 @@ for x = 1:X
         if ~mask(x, y), continue; end
         
         % Handling bad data 
-        if S0 =<0
+        %S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable.)
+        if S0 =<0 %Skips to next loop if S0 is negative.
             continue
         end
-A(x,y) = [x,y]
+
+
+   
+            
+            
+            
+            A(x,y) = [x,y]
 
 
 
