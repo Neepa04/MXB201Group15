@@ -48,7 +48,7 @@ for x = 1:X
         end
 
         % Solving least squares problem
-        B = log (squeeze(S(x,y,:))./ S0(x,y)) / b; %Find B
+        B = -log (squeeze(S(x,y,:))./ S0(x,y)) / b; %Find B
 
         D_vector = A\B; %Use MATLAB \ function to find least squares D vector
        
@@ -65,3 +65,10 @@ for x = 1:X
 end
 
 %% Plot mean diffusivity, fractional anisotropy and principal diffusion direction maps
+
+
+imagesc(MD)
+
+
+
+
