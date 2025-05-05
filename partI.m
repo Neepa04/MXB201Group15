@@ -37,27 +37,18 @@ for x = 1:X
         
         % Handling bad data 
             %S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable.)
-        if S0 <= 0 %Skips to next loop if S0 is negative.
+        if S0(x,y) <= 0 %Skips to next loop if S0 is negative.
             continue;
         end
         Measurement_count = size(S,3);
         for i = 1:Measurement_count
             if S(x,y,i) <= 0
-                continue
+                continue;
             end
         end
 
-
-   
-            
-            
-            
-            
-
-
-
-        
         % Solving least squares problem
+        B = log (S(x,y,:)./ S0(x,y)) / b;
         % Forming diffusion tensor
         % Finding eigenvalues and eigenvectors
         % Calculating MD, FA and PDD
