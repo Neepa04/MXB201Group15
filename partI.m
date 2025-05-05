@@ -36,9 +36,15 @@ for x = 1:X
         if ~mask(x, y), continue; end
         
         % Handling bad data 
-        %S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable.)
+            %S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable.)
         if S0 <= 0 %Skips to next loop if S0 is negative.
-            continue
+            continue;
+        end
+        Measurement_count = size(S,3);
+        for i = 1:Measurement_count
+            if S(x,y,i) <= 0
+                continue
+            end
         end
 
 
