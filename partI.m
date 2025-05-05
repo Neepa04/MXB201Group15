@@ -65,10 +65,11 @@ end
 
 %% Plot mean diffusivity, fractional anisotropy and principal diffusion direction maps
 
-colormap(gray)
+Trimmed_MD = prctile(MD(mask),99);
+imagesc(MD,[0 Trimmed_MD])
+axis image off
+colormap(gray), colorbar
 
-
-imagesc(MD), axis image off
 
 
 
