@@ -59,6 +59,8 @@ for x = 1:X
       
         % Calculating MD, FA and PDD
         MD(x,y) = mean(lambda); % Enscribe average of eigenvalues before restarting loop.
+        AvgLambda = (lambda(1,1)+lambda(2,1)+lambda(3,1))/3
+        FA(x,y) = (sqrt(3)./sqrt(2)) .* sqrt((lambda(1,1)-AvgLambda).^2 + (lambda(2,1)-AvgLambda).^2 + (lambda(3,1)-AvgLambda).^2)./(sqrt(lambda(1,1).^2+lambda(2,1).^2+lambda(3,1).^2))
 
     end
 end
@@ -66,10 +68,11 @@ end
 %% Plot mean diffusivity, fractional anisotropy and principal diffusion direction maps
 
 Trimmed_MD = prctile(MD(mask),99);
-imagesc(MD,[0 Trimmed_MD])
-axis image off
-colormap(gray), colorbar
 
+subplot(1,3,2)
+imagesc(FA,[0 1]) 
+axis image off
+title('FA')
 
 
 
