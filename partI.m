@@ -37,12 +37,12 @@ for x = 1:X
         
         % Handling bad data 
             %S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable.)
-        if S0(x,y) <= 0 %Skips to next loop if S0 is negative.
+        if S0(x,y) <=1 %Skips to next loop if S0 is negative.
             continue;
         end
         
-        if any(S(x,y,:)<=0, 'all') %Ends loop if any values are negative for a given x,y
-            continue
+        if any(S(x,y,:)<=1, 'all') %Ends loop if any values are negative for a given x,y
+            continue;
         end
 
         % Solving least squares problem
@@ -54,11 +54,13 @@ for x = 1:X
         D = [D_vector(1) D_vector(4) D_vector(5); D_vector(4), D_vector(2), D_vector(6); D_vector(5), D_vector(6), D_vector(3)]; %Arrange D values into 3x3 matrix as per guidelines
         
         % Finding eigenvalues and eigenvectors
-        [EVec,EVal] = eig(D)
+        [EVec,EVal] = eig(D);
         lambda = diag(EVal); %Retrieve diagonal of EVal which are D's eigenvalues
       
         % Calculating MD, FA and PDD
+        if mean(lambda) > 10.^-12 % Ensure very small numbers are not written.
         MD(x,y) = mean(lambda); % Enscribe average of eigenvalues before restarting loop.
+        end
         FA(x,y) = (sqrt(3)./sqrt(2)) .* sqrt((lambda(1,1)-MD(x,y)).^2 + (lambda(2,1)-MD(x,y)).^2 + (lambda(3,1)-MD(x,y)).^2)./(sqrt(lambda(1,1).^2+lambda(2,1).^2+lambda(3,1).^2));
 
     end
@@ -68,11 +70,13 @@ end
 
 colormap(gray)
 
-trimmed_MD = prctile(MD(mask),[1 99]);
-subplot(1,3,1);  imagesc(MD,trimmed_MD);
+%MD image
+subplot(1,3,1);  
+imagesc(MD);
 axis image off;  
 title('MD');
 
+%FA image
 subplot(1,3,2)
 imagesc(FA,[0 1]) 
 axis image off
