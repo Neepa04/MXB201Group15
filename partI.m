@@ -63,6 +63,10 @@ for x = 1:X
         end
         FA(x,y) = (sqrt(3)./sqrt(2)) .* sqrt((lambda(1,1)-MD(x,y)).^2 + (lambda(2,1)-MD(x,y)).^2 + (lambda(3,1)-MD(x,y)).^2)./(sqrt(lambda(1,1).^2+lambda(2,1).^2+lambda(3,1).^2));
 
+        [~,big_l] = max(lambda);
+        big_v = EVec(:,big_l);
+        PDD(x,y,:) = big_v ./ norm(big_v);
+
     end
 end
 
@@ -83,5 +87,7 @@ axis image off
 title('FA')
 
 
-
-
+subplot(1,3,3)
+imagesc(PDD,[0 1]) 
+axis image off
+title('PDD')
