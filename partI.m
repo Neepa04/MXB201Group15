@@ -89,7 +89,7 @@ axis image off
 title('FA')
 
 %PDD image
-rgb = PDD
+rgb = abs(PDD)
 
 rgb(:,:,1) = rgb(:,:,1) .* FA; %red     
 rgb(:,:,2) = rgb(:,:,2) .* FA; %green      
