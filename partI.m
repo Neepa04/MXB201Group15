@@ -72,22 +72,30 @@ end
 
 %% Plot mean diffusivity, fractional anisotropy and principal diffusion direction maps
 
-colormap(gray)
+
 
 %MD image
+colormap(gray)
 subplot(1,3,1);  
 imagesc(MD);
 axis image off;  
 title('MD');
 
 %FA image
+colormap(gray)
 subplot(1,3,2)
 imagesc(FA,[0 1]) 
 axis image off
 title('FA')
 
+%PDD image
+rgb = PDD
+
+rgb(:,:,1) = rgb(:,:,1) .* FA; %red     
+rgb(:,:,2) = rgb(:,:,2) .* FA; %green      
+rgb(:,:,3) = rgb(:,:,3) .* FA; %blue
 
 subplot(1,3,3)
-imagesc(PDD,[0 1]) 
+imagesc(rgb)                          
 axis image off
 title('PDD')
