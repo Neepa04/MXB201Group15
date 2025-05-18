@@ -16,6 +16,16 @@ for j = 1:N
 end
 
 %% Calculate and visualise mean face
+mean_face = sum(A, 2) ./ size(A, 2);    % Finding the average column of A
+
+% Converting the dimensions to a readbile matrix for visualisation
+mean_face_vis = zeros(192, 168);
+
+for j = 1:168
+    mean_face_vis(:,j) = mean_face( ((j - 1) * 192) + 1:j * 192);
+end
+
+imshow(uint8(mean_face_vis), 'InitialMagnification','fit')
 
 %% Calculate mean-centred SVD
 
