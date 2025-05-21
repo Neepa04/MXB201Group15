@@ -16,6 +16,8 @@ for j = 1:N
 end
 
 %% Calculate and visualise mean face
+
+% Calculating mean face
 mean_face = sum(A,2) ./ size(A, 2);
 
 % Visualising mean face
@@ -24,8 +26,15 @@ imshow(mean_face_vis, 'InitialMagnification', 'fit')
 
 %% Calculate mean-centred SVD
 
+% Calculating mean-centred matrix
+mean_centred = A - mean_face;
+
+% Mean-centred SVD
+[U, Sigma, V] = svd(mean_centred, 'econ');
+
 %% Visualise first 20 eigenfaces
 
+% Re
 %% Calculate coordinate vectors
 
 %% Demonstrate rudimentary moustache detector
