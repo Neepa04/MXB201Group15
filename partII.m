@@ -21,8 +21,8 @@ end
 mean_face = sum(A,2) ./ size(A, 2);
 
 % Visualising mean face
-mean_face_vis = reshape(uint8(mean_face), 192, 168);
-imshow(mean_face_vis, 'InitialMagnification', 'fit')
+mean_face_vis = reshape(uint8(mean_face), rows, cols);
+imshow(mean_face_vis, 'InitialMagnification', 'Fit')
 
 %% Calculate mean-centred SVD
 
@@ -34,7 +34,15 @@ mean_centred = A - mean_face;
 
 %% Visualise first 20 eigenfaces
 
-% Re
+% Reshaping the first 20 columns of mean-centred matrix
+for i = 1:20
+    twenty_eigenfaces = reshape(uint8(U(:,i)), rows, cols);
+end
+
+% Visualising first 20 eigenfaces
+figure
+imshow(twenty_eigenfaces, 'InitialMagnification', 'Fit')
+
 %% Calculate coordinate vectors
 
 %% Demonstrate rudimentary moustache detector
