@@ -16,11 +16,11 @@ for j = 1:N
 end
 
 %% Calculate and visualise mean face
-mean_face = sum(A,2) ./ size(A, 2)
+mean_face = sum(A,2) ./ size(A, 2);
 
 % Visualising mean face
-
-
+mean_face_vis = reshape(uint8(mean_face), 192, 168);
+imshow(mean_face_vis, 'InitialMagnification', 'fit')
 
 %% Calculate mean-centred SVD
 
