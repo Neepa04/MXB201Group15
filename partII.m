@@ -35,12 +35,18 @@ mean_centred = A - mean_face;
 %% Visualise first 20 eigenfaces
 
 % Reshaping the first 20 columns of mean-centred matrix
-for i = 1:20
-    twenty_eigenfaces = reshape(uint8(U(:,i)), rows, cols);
-end
+twenty_eigenfaces = reshape(U, rows, cols, N);
 
 % Visualising first 20 eigenfaces
 figure
+tiledlayout(4, 5, 'Padding','Compact')
+
+for x = 1:20
+    nexttile
+    imagesc(twenty_eigenfaces(:,:,x));
+    colormap('gray')
+end
+
 imshow(twenty_eigenfaces, 'InitialMagnification', 'Fit')
 
 %% Calculate coordinate vectors
