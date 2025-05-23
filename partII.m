@@ -1,4 +1,4 @@
-% Template for MXB201 Project Part II.
+% MXB201 Project Part II.
 
 %% Initialisation
 clear
@@ -50,5 +50,28 @@ for x = 1:20
 end
 
 %% Calculate coordinate vectors
+
+random_face = A(:, 378);     % Random face
+
+S = U(:, 1:47);              % Eigenface space of largest singular values
+
+Proj_S = S*inv(S'*S)*S';       % Projector onto the eigenface space
+
+
+% Coordinate vector
+Proj_S_face = Proj_S*random_face;
+
+Proj_S_face_vis = reshape(uint8(Proj_S_face), rows, cols);
+
+figure
+imshow(Proj_S_face_vis, 'InitialMagnification', 'Fit')
+
+figure
+randomface = reshape(A(:,378), rows, cols);
+imshow(uint8(randomface), 'InitialMagnification', 'Fit')
+
+
+
+
 
 %% Demonstrate rudimentary moustache detector
