@@ -49,8 +49,6 @@ for x = 1:20
     axis off
 end
 
-imshow(eigenfaces, 'InitialMagnification', 'Fit')
-
 %% Calculate coordinate vectors
 
 %% Demonstrate rudimentary moustache detector
