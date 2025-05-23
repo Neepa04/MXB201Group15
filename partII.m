@@ -23,6 +23,7 @@ mean_face = sum(A,2) ./ size(A, 2);
 % Visualising mean face
 mean_face_vis = reshape(uint8(mean_face), rows, cols);
 imshow(mean_face_vis, 'InitialMagnification', 'Fit')
+title('Mean Face')
 
 %% Calculate mean-centred SVD
 
@@ -54,21 +55,23 @@ end
 random_face = A(:, randi(1000));       % Random face
 
 S = U(:, 1:47);                % Eigenface space of largest singular values
-
 Proj_S = S*inv(S'*S)*S';       % Projector onto the eigenface space
 
 
 % Coordinate vector (Random face projected onto eigenface space)
 Proj_S_face = Proj_S*random_face;
 
+
 % Visualisation of original face and reconstructed face
 Proj_S_face_vis = reshape(uint8(Proj_S_face), rows, cols);
 
 figure
 imshow(Proj_S_face_vis, 'InitialMagnification', 'Fit')
+title('Reconstructed Face of Eigenfaces')
 
 figure
 randomface = reshape(uint8(random_face), rows, cols);
 imshow(randomface, 'InitialMagnification', 'Fit')
+title('Original Face')
 
 %% Demonstrate rudimentary moustache detector
