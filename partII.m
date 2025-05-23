@@ -51,27 +51,24 @@ end
 
 %% Calculate coordinate vectors
 
-random_face = A(:, 378);     % Random face
+random_face = A(:, randi(1000));       % Random face
 
-S = U(:, 1:47);              % Eigenface space of largest singular values
+S = U(:, 1:47);                % Eigenface space of largest singular values
 
 Proj_S = S*inv(S'*S)*S';       % Projector onto the eigenface space
 
 
-% Coordinate vector
+% Coordinate vector (Random face projected onto eigenface space)
 Proj_S_face = Proj_S*random_face;
 
+% Visualisation of original face and reconstructed face
 Proj_S_face_vis = reshape(uint8(Proj_S_face), rows, cols);
 
 figure
 imshow(Proj_S_face_vis, 'InitialMagnification', 'Fit')
 
 figure
-randomface = reshape(A(:,378), rows, cols);
-imshow(uint8(randomface), 'InitialMagnification', 'Fit')
-
-
-
-
+randomface = reshape(uint8(random_face), rows, cols);
+imshow(randomface, 'InitialMagnification', 'Fit')
 
 %% Demonstrate rudimentary moustache detector
