@@ -1,5 +1,4 @@
 % MXB201 Project Part II.
-
 %% Initialisation
 clear
 d = dir('faces/*.pgm');
@@ -52,26 +51,32 @@ end
 
 %% Calculate coordinate vectors
 
-random_face = A(:, randi(1000));       % Random face
+randomnum = randi(1000);
+random_face = A(:, randomnum);         % Random face
 
-S = U(:, 1:47);                % Eigenface space of largest singular values
-Proj_S = S*inv(S'*S)*S';       % Projector onto the eigenface space
+S = U(:, 1:47);                        % Eigenface space of largest singular values
+Proj_S = S*inv(S'*S)*S';               % Projector onto the eigenface space
 
 
-% Coordinate vector (Random face projected onto eigenface space)
-Proj_S_face = Proj_S*random_face;
+% Coordinate vectors (Least Squares Solution)
+LHS = S'*S;
+RHS = S'*random_face;
+c_vector = LHS \ RHS;
 
+recon_face = S*c_vector;               % Reconstructed face using linear combinations of eigenfaces
 
 % Visualisation of original face and reconstructed face
-Proj_S_face_vis = reshape(uint8(Proj_S_face), rows, cols);
-
-figure
-imshow(Proj_S_face_vis, 'InitialMagnification', 'Fit')
-title('Reconstructed Face of Eigenfaces')
-
-figure
+figure      % Original Random Face
 randomface = reshape(uint8(random_face), rows, cols);
 imshow(randomface, 'InitialMagnification', 'Fit')
 title('Original Face')
 
+figure      % Reconstructed Face
+face_recon = reshape(uint8(recon_face), rows, cols);
+imshow(face_recon, 'InitialMagnification', 'Fit')
+title('Reconstructed Face')
+
 %% Demonstrate rudimentary moustache detector
+
+% The 13 th column of the eigenface space corresponds to having a moustache
+uint8(c_vector);
