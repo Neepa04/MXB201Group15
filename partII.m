@@ -51,19 +51,16 @@ end
 
 %% Calculate coordinate vectors
 
-randomnum = randi(1000);
-random_face = A(:, randomnum);         % Random face
+S = U(:, 1:47);                        % Eigenface space of largest singular values
 
-S = U(:, 1:20);                        % Eigenface space of largest singular values
-Proj_S = S*inv(S'*S)*S';               % Projector onto the eigenface space
+% Coordinate vectors (Least Squares Solution)
+for i = 1:1000
+    LHS = S'*S;
+    RHS = S'*A(:, i);
+    c_vectors(:,i) = LHS \ RHS;
+end
 
-
-% Coordinate vector (Least Squares Solution)
-LHS = S'*S;
-RHS = S'*random_face;
-c_vector = LHS \ RHS;
-
-recon_face = S*c_vector;               % Reconstructed face using linear combinations of eigenfaces
+% recon_face = S*c_vector;               % Reconstructed face using linear combinations of eigenfaces
 
 % Visualisation of original face and reconstructed face
 figure      % Original Random Face
@@ -81,8 +78,11 @@ title('Reconstructed Face')
 % The 13th column of the eigenface space corresponds to the moustache characteristic
 % Therefore, the 13th row of the coordinate vector determines the level of moustache apparent in the photo
 
-if c_vector(13) > 0.5
+for j = 1:1000
+    if c_vectors(13:j) > 0.5
     disp("Moustache detected")
-else
+    else
     disp("Moustache Undetected")
+    end
 end
+
