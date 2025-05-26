@@ -17,12 +17,12 @@ end
 %% Calculate and visualise mean face
 
 % Calculating mean face
-mean_face = sum(A,2) ./ size(A, 2);
+mean_face = sum(A,2) / size(A, 2);
 
 % Visualising mean face
 mean_face_vis = reshape(uint8(mean_face), rows, cols);
 imshow(mean_face_vis, 'InitialMagnification', 'Fit')
-title('Mean Face')
+title('Mean Face Visualisation')
 
 %% Calculate mean-centred SVD
 
@@ -40,6 +40,7 @@ eigenfaces = reshape(U, rows, cols, N);
 % Visualising first 20 eigenfaces
 figure
 tiledlayout(4, 5, 'Padding','Compact')
+sgtitle('First 20 Eigenfaces Visualisation')
 
 for x = 1:20
     nexttile
@@ -54,35 +55,116 @@ end
 S = U(:, 1:47);                        % Eigenface space of largest singular values
 
 % Coordinate vectors (Least Squares Solution)
-for i = 1:1000
+c_vectors = zeros(47, N);              % Initialising coordinate vector matrix
+
+for i = 1:N
     LHS = S'*S;
     RHS = S'*A(:, i);
     c_vectors(:,i) = LHS \ RHS;
 end
 
-% recon_face = S*c_vector;               % Reconstructed face using linear combinations of eigenfaces
+%% TEST
+recon_face = S*c_vectors(:,30);
 
-% Visualisation of original face and reconstructed face
-figure      % Original Random Face
-randomface = reshape(uint8(random_face), rows, cols);
-imshow(randomface, 'InitialMagnification', 'Fit')
-title('Original Face')
-
-figure      % Reconstructed Face
-face_recon = reshape(uint8(recon_face), rows, cols);
-imshow(face_recon, 'InitialMagnification', 'Fit')
-title('Reconstructed Face')
+figure
+recon_face_vis = reshape(uint8(recon_face), rows, cols);
+imshow(recon_face_vis, 'InitialMagnification', 'Fit')
+title('TEST: Recon face')
 
 %% Demonstrate rudimentary moustache detector
 
 % The 13th column of the eigenface space corresponds to the moustache characteristic
-% Therefore, the 13th row of the coordinate vector determines the level of moustache apparent in the photo
+% Therefore, the 13th row of the coordinate vector determines the **moustache level** apparent in the photo
 
-for j = 1:1000
-    if c_vectors(13:j) > 0.5
-    disp("Moustache detected")
-    else
-    disp("Moustache Undetected")
-    end
+
+% Isolate columns of A corresponding to faces with a moustache
+mask = c_vectors(13,:) > 2988;      % Moustache Level: 2000
+moustache_faces = A(:,mask);
+
+% Visualising faces with detected moustache
+moustache_faces_vis = reshape(moustache_faces,rows, cols, size(moustache_faces, 2));
+
+% Producing an approximate square tiled layout for any moustache level
+layout = round(sqrt(size(moustache_faces, 2)));
+
+if layout^2 < size(moustache_faces, 2)
+    layout2 = layout + 1;
+else
+    layout2 = layout;
 end
 
+figure
+tiledlayout(layout, layout2, 'Padding', 'Compact')
+sgtitle('Visualisation of Faces with Detected Moustache')
+
+for i = 1:size(moustache_faces, 2)
+    nexttile
+    imagesc(moustache_faces_vis(:,:, i))
+    colormap('gray')
+    axis off
+end
+
+%% TEST
+        % TEST; Visualisation of selected faces
+figure
+tiledlayout(6, 6)
+sgtitle('TEST: Visualisation of selected faces')
+
+face = A(:,1:36);
+face_vis = reshape(face, rows, cols, 36);
+
+for u = 1:36
+    nexttile
+    imagesc(face_vis(:,:, u))
+    colormap('gray')
+    axis off
+end
+
+
+
+        % TEST: Visualisation of each unique face
+figure
+tiledlayout(5, 7)
+sgtitle('TEST: Visualisation of each unique face')
+
+mask2 = 1:29:1000;
+faces = A(:,mask2);         % Matrix of unique faces only
+
+faces_vis = reshape(faces, rows, cols, size(faces, 2));
+
+for u = 1:size(faces,2)
+    nexttile
+    imagesc(faces_vis(:,:, u))
+    colormap('gray')
+    axis off
+end
+
+
+% Coordinate vectors of each unique face (Least Squares Solution)
+uc_vectors = zeros(47, 35);           % Initialising unique coordinate vector matrix
+
+for i = 1:35
+    LHS = S'*S;
+    RHS = S'*faces(:, i);
+    uc_vectors(:,i) = LHS \ RHS;
+end
+
+% Isolate columns of unique faces matrix corresponding to faces with a moustache
+mask3 = uc_vectors(13,:) > 2000;
+moustache_faces2 = faces(:,mask3);
+
+% Visualising unique faces with detected moustache
+moustache_faces_vis2 = reshape(moustache_faces2,rows, cols, size(moustache_faces2, 2));
+
+figure
+tiledlayout(1, size(moustache_faces2, 2), "Padding","Compact")
+sgtitle('TEST: Visualisation of Unique Faces with Detected Moustache')
+
+for i = 1:size(moustache_faces2, 2)
+    nexttile
+    imagesc(moustache_faces_vis2(:,:, i))
+    colormap('gray')
+    axis off
+end
+
+H = uc_vectors(:, [1 2 4 6 9 20]);
