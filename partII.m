@@ -79,18 +79,19 @@ title('TEST: Recon face')
 
 
 % Isolate columns of A corresponding to faces with a moustache
-moustache_level = 2000;        % Moustache Level
+moustache_level = 2200;                             % Moustache Level
 
 mask = c_vectors(13,:) >= moustache_level;      
 moustache_faces = A(:,mask);
+moustache_faces_cols = size(moustache_faces, 2);    % Number of moustache faces (columns) detected
 
 % Visualising faces with detected moustache
-moustache_faces_vis = reshape(moustache_faces,rows, cols, size(moustache_faces, 2));
+moustache_faces_vis = reshape(moustache_faces,rows, cols, moustache_faces_cols);
 
 % Producing an approximate square tiled layout for any moustache level
-layout = round(sqrt(size(moustache_faces, 2)));
+layout = round(sqrt(moustache_faces_cols));
 
-if layout^2 < size(moustache_faces, 2)
+if layout^2 < moustache_faces_cols
     layout2 = layout + 1;
 else
     layout2 = layout;
@@ -100,12 +101,14 @@ figure
 tiledlayout(layout, layout2, 'Padding', 'Compact')
 sgtitle('Visualisation of Faces with Detected Moustache')
 
-for i = 1:size(moustache_faces, 2)
+for i = 1:moustache_faces_cols
     nexttile
     imagesc(moustache_faces_vis(:,:, i))
     colormap('gray')
     axis off
 end
+
+fprintf("There are %d faces detected with a moustache (Moustache Level = %d).\n", moustache_faces_cols, moustache_level)
 
 %% TEST
         % TEST; Visualisation of selected faces
