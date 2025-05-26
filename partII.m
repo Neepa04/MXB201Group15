@@ -20,6 +20,7 @@ end
 mean_face = sum(A,2) / size(A, 2);
 
 % Visualising mean face
+figure
 mean_face_vis = reshape(uint8(mean_face), rows, cols);
 imshow(mean_face_vis, 'InitialMagnification', 'Fit')
 title('Mean Face Visualisation')
@@ -84,6 +85,7 @@ moustache_level = 2200;                             % Moustache Level
 mask = c_vectors(13,:) >= moustache_level;      
 moustache_faces = A(:,mask);
 moustache_faces_cols = size(moustache_faces, 2);    % Number of moustache faces (columns) detected
+
 
 % Visualising faces with detected moustache
 moustache_faces_vis = reshape(moustache_faces,rows, cols, moustache_faces_cols);
