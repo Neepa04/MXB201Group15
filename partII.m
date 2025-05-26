@@ -23,7 +23,7 @@ mean_face = sum(A,2) / size(A, 2);
 figure
 mean_face_vis = reshape(uint8(mean_face), rows, cols);
 imshow(mean_face_vis, 'InitialMagnification', 'Fit')
-title('Mean Face Visualisation')
+title('Mean Face')
 
 %% Calculate mean-centred SVD
 
@@ -41,7 +41,7 @@ eigenfaces = reshape(U, rows, cols, N);
 % Visualising first 20 eigenfaces
 figure
 tiledlayout(4, 5, 'Padding','Compact')
-sgtitle('First 20 Eigenfaces Visualisation')
+sgtitle('First 20 Eigenfaces')
 
 for x = 1:20
     nexttile
@@ -101,7 +101,7 @@ end
 
 figure
 tiledlayout(layout, layout2, 'Padding', 'Compact')
-sgtitle('Visualisation of Faces with Detected Moustache')
+sgtitle('Faces with Detected Moustaches')
 
 for i = 1:moustache_faces_cols
     nexttile
