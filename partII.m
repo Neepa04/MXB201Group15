@@ -78,17 +78,18 @@ title('TEST: Recon face')
 % Therefore, the 13th row of the coordinate vector determines the **moustache level** apparent in the photo
 % Below moustache level = moustache undetected,   Equal or above moustache level = moustache detected
 
+% The sample will be the entire face database given (all columns of A i.e 1000 photos)
 
 % Isolate columns of A corresponding to faces with a moustache
-moustache_level = 2200;                             % Moustache Level
+moustache_level = 1900;                             % Moustache Level
 
 mask = c_vectors(13,:) >= moustache_level;      
-moustache_faces = A(:,mask);
+moustache_faces = A(:, mask);
 moustache_faces_cols = size(moustache_faces, 2);    % Number of moustache faces (columns) detected
 
 
 % Visualising faces with detected moustache
-moustache_faces_vis = reshape(moustache_faces,rows, cols, moustache_faces_cols);
+moustache_faces_vis = reshape(moustache_faces, rows, cols, moustache_faces_cols);
 
 % Producing an approximate square tiled layout for any moustache level
 layout = round(sqrt(moustache_faces_cols));
@@ -100,17 +101,22 @@ else
 end
 
 figure
-tiledlayout(layout, layout2, 'Padding', 'Compact')
-sgtitle('Faces with Detected Moustaches')
+colnum_moustacheface = find(mask);          % Column numbers of moustache detected from A
+tiledlayout(layout, layout2, 'Padding', 'Compact', 'TileSpacing', 'Compact')
+sgtitle('Sample Results of Moustache Detector')
 
 for i = 1:moustache_faces_cols
     nexttile
     imagesc(moustache_faces_vis(:,:, i))
     colormap('gray')
+    title(['Photo ' num2str(colnum_moustacheface(i))]);
     axis off
 end
 
 fprintf("There are %d faces detected with a moustache (Moustache Level = %d).\n", moustache_faces_cols, moustache_level)
+
+% The detector successfully detected 29/30 images of an individual with a
+% moustache from a moustache level standpoint of 1900.
 
 %% TEST
         % TEST; Visualisation of selected faces
