@@ -75,10 +75,13 @@ title('TEST: Recon face')
 
 % The 13th column of the eigenface space corresponds to the moustache characteristic
 % Therefore, the 13th row of the coordinate vector determines the **moustache level** apparent in the photo
+% Below moustache level = moustache undetected,   Equal or above moustache level = moustache detected
 
 
 % Isolate columns of A corresponding to faces with a moustache
-mask = c_vectors(13,:) > 2988;      % Moustache Level: 2000
+moustache_level = 2000;        % Moustache Level
+
+mask = c_vectors(13,:) >= moustache_level;      
 moustache_faces = A(:,mask);
 
 % Visualising faces with detected moustache
