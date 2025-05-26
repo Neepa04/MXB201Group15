@@ -115,8 +115,8 @@ end
 
 fprintf("There are %d faces detected with a moustache (Moustache Level = %d).\n", moustache_faces_cols, moustache_level)
 
-% The detector successfully detected 29/30 images of an individual with a
-% moustache from a moustache level standpoint of 1900.
+% From a moustache level standpoint of 1900, the detector successfully detected 29/30 images of an individual with a
+% moustache giving an accuracy of 0.97%
 
 %% TEST
         % TEST; Visualisation of selected faces
