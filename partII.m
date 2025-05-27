@@ -124,9 +124,9 @@ uniquefaces = A(:,mask2);
 uc_vectors = c_vectors(:, mask2);
 
 % Isolate columns of unique faces matrix corresponding to faces with a moustache
-uf_moustache_level = 1900;                               % Moustache level
+moustache_level2 = 1900;                                 % Moustache level
 
-mask3 = uc_vectors(13,:) >= uf_moustache_level;
+mask3 = uc_vectors(13,:) >= moustache_level2;
 uf_moustache_faces = uniquefaces(:,mask3);
 uf_moustache_faces_cols = size(uf_moustache_faces, 2);   % Number of detected moustache faces (columns)   
 
@@ -175,4 +175,7 @@ for i = 1: uf_moustache_faces_cols
 end
 
 fprintf("There are %d unique faces detected with a moustache (Moustache Level = %d).\n", ...
-    uf_moustache_faces_cols, uf_moustache_level)
+    uf_moustache_faces_cols, moustache_level2)
+
+% There are two faces with a moustache from the sample of unique faces. From a moustache level standpoint of 1800, 
+% the detector successfully detected 2/2 images of an individual with a moustache giving a perfect accuracy (100%)
