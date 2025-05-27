@@ -23,7 +23,7 @@ mean_face = sum(A,2) / size(A, 2);
 figure
 mean_face_vis = reshape(uint8(mean_face), rows, cols);
 imshow(mean_face_vis, 'InitialMagnification', 'Fit')
-title('Mean Face')
+title('Mean Face', 'FontWeight', 'Bold')
 
 %% Calculate mean-centred SVD
 
@@ -41,7 +41,7 @@ eigenfaces = reshape(U, rows, cols, N);
 % Visualising first 20 eigenfaces
 figure
 tiledlayout(4, 5, 'Padding','Compact')
-sgtitle('First 20 Eigenfaces')
+sgtitle('First 20 Eigenfaces', 'FontWeight', 'Bold')
 
 for x = 1:20
     nexttile
@@ -73,7 +73,7 @@ end
 % The sample will be the entire face database given (all columns of A i.e. 1000 photos)
 
 % Isolate columns of A corresponding to faces with a moustache
-moustache_level = 1100;                             % Moustache Level
+moustache_level = 1900;                             % Moustache Level
 
 mask = c_vectors(13,:) >= moustache_level;      
 moustache_faces = A(:, mask);
@@ -95,7 +95,7 @@ end
 figure
 colnum_moustacheface = find(mask);          % Column numbers of moustache detected from A
 tiledlayout(layout, layout2, 'Padding', 'Compact', 'TileSpacing', 'Compact')
-sgtitle('All Faces: Faces Detected Visualisation')
+sgtitle('All Faces: Faces Detected Visualisation', 'FontWeight', 'Bold')
 
 for i = 1:moustache_faces_cols
     nexttile
@@ -105,13 +105,14 @@ for i = 1:moustache_faces_cols
     axis off
 end
 
-fprintf("There are %d faces detected with a moustache (Moustache Level = %d).\n", moustache_faces_cols, moustache_level)
+fprintf("There are %d faces detected with a moustache (Moustache Level = %d).\n", ...
+    moustache_faces_cols, moustache_level)
 
 % From a moustache level standpoint of 1900, the detector successfully detected 29/30 images of an individual with a
 % moustache giving an accuracy of 97%
 
 
-%% TEST: ALTERNATIVE
+%% ALTERNATIVE: SMALLER SAMPLE
 
 % Moustache detector on a sample of 35 unique faces
 
@@ -123,7 +124,7 @@ uniquefaces = A(:,mask2);
 uc_vectors = c_vectors(:, mask2);
 
 % Isolate columns of unique faces matrix corresponding to faces with a moustache
-uf_moustache_level = 1100;                               % Moustache level
+uf_moustache_level = 1900;                               % Moustache level
 
 mask3 = uc_vectors(13,:) >= uf_moustache_level;
 uf_moustache_faces = uniquefaces(:,mask3);
@@ -135,7 +136,7 @@ uniquefaces_vis = reshape(uniquefaces, rows, cols, size(uniquefaces, 2));
 
 figure
 tiledlayout(5, 7, 'Padding', 'Compact', 'TileSpacing', 'Compact')
-sgtitle('Unique Faces: Moustache Detector Results (Yes or No)')
+sgtitle('Unique Faces: Moustache Detector Results (Yes or No)', 'FontWeight', 'Bold')
 
 for u = 1:size(uniquefaces,2)
     nexttile
@@ -164,7 +165,7 @@ end
 
 figure
 tiledlayout(layout, layout2, "Padding","Compact")
-sgtitle('Unique Faces: Faces Detected Visualisation')
+sgtitle('Unique Faces: Faces Detected Visualisation', 'FontWeight', 'Bold')
 
 for i = 1: uf_moustache_faces_cols
     nexttile
@@ -173,4 +174,5 @@ for i = 1: uf_moustache_faces_cols
     axis off
 end
 
-fprintf("There are %d unique faces detected with a moustache (Moustache Level = %d).\n", uf_moustache_faces_cols, uf_moustache_level)
+fprintf("There are %d unique faces detected with a moustache (Moustache Level = %d).\n", ...
+    uf_moustache_faces_cols, uf_moustache_level)
