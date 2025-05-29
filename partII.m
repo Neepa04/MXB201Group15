@@ -88,7 +88,7 @@ c_vectors = S'*A;
 % The sample will be the entire face database given (all columns of A i.e. 1000 photos)
 
 % Isolate columns of A corresponding to faces with a moustache
-moustache_level = 2000;                             % Moustache Level
+moustache_level = 3500;                             % Moustache Level
 
 mask = c_vectors(13,:) >= moustache_level;      
 moustache_faces = A(:, mask);
@@ -101,7 +101,10 @@ moustache_faces_vis = reshape(moustache_faces, rows, cols, moustache_faces_cols)
 % Producing an approximate square tiled layout for any moustache level
 layout = round(sqrt(moustache_faces_cols));
 
-if layout^2 < moustache_faces_cols
+if layout == 0
+    disp("Zero faces detected for all faces sample, lower moustache level")
+    return
+elseif layout^2 < moustache_faces_cols
     layout2 = layout + 1;
 else
     layout2 = layout;
@@ -139,11 +142,11 @@ uniquefaces = A(:,mask2);
 c_vectors2 = c_vectors(:, mask2);
 
 % Isolate columns of unique faces matrix corresponding to faces with a moustache
-moustache_level2 = 1200;                                 % Moustache level
+moustache_level2 = 3500;                                 % Moustache level
 
 mask3 = c_vectors2(13,:) >= moustache_level2;
 moustache_faces2 = uniquefaces(:,mask3);
-moustache_faces_cols2 = size(moustache_faces2, 2);   % Number of detected moustache faces (columns)   
+moustache_faces_cols2 = size(moustache_faces2, 2);       % Number of detected moustache faces (columns)   
 
 
 % Visualising unique faces with a moustache (Yes or No)
@@ -172,7 +175,10 @@ moustache_faces_vis2 = reshape(moustache_faces2, rows, cols, moustache_faces_col
 % Producing an approximate square tiled layout for any moustache level
 layout = round(sqrt(moustache_faces_cols2));
 
-if layout^2 < moustache_faces_cols2
+if layout == 0
+    disp("Zero faces detected for unqiue faces sample, lower the moustache level")
+    return
+elseif layout^2 < moustache_faces_cols
     layout2 = layout + 1;
 else
     layout2 = layout;
@@ -223,4 +229,23 @@ fprintf("Unique Faces Sample Accuracy: %.2f%% \n", Accuracy * 100)
 % 35 unique faces is flawless at a 100% accuracy. *HOWEVER*, this accuracy is specific to the sample used, and
 % may not generalise to larger or differently composed datasets.
 
-% Optimal moustache level: < #      plan: plot accuracy vs moustache level
+
+% Optimal moustache level:
+
+moustache_level2 = 1:3500;
+
+for i = 1:3500
+    mask3 = c_vectors2(13,:) >= i;
+    TP = sum((groundtruth == 1) & (mask3 == 1));
+    TN = sum((groundtruth == 0) & (mask3 == 0)); 
+    FP = sum((groundtruth == 0) & (mask3 == 1));
+    FN = sum((groundtruth == 1) & (mask3 == 0));
+    Accuracy(i,:) = (TP + TN) / (TP + TN + FP + FN);
+end
+
+figure
+plot(moustache_level2, Accuracy * 100)
+title('Optimal Moustache Level')
+
+xlabel('Moustache Level'), ylabel('Accuracy (%)')
+xlim([0 3500]), ylim([20 120])
