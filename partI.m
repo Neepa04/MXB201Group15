@@ -5,7 +5,7 @@
 %%For each gradient direction gi, the signal S that was recorded for each voxel.
 % D is the diffusion tensor, a SPD 3x3 matrix.
 
-%Create an overdetermined system, use least-squares to solve the system and retrieve the values for the diffusion tensor.
+%Create an overdetermined system, use least-squares to solve the system, and retrieve the values for the diffusion tensor.
 
 %dtmri contains arrays: (S,S0,b,g, mask)
 %Mask is a binary array that differentiates the MRI area of interest (brain), and unneeded noise (background).
@@ -20,7 +20,7 @@ load partI.mat
 [X,Y,num_dirs] = size(S);
 assert(isequal(size(g), [num_dirs 3]));
 
-% These arrays will be be filled in during the main loop below
+% These arrays will be filled in during the main loop below
 MD  = nan(X, Y);    % mean diffusion
 FA  = nan(X, Y);    % fractional anistropy
 PDD = nan(X, Y, 3); % principal diffusion direction
@@ -36,7 +36,7 @@ for x = 1:X
         if ~mask(x, y), continue; end
         
         % Handling bad data 
-            %S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable.)
+            %S and S0 measurements should not be negative (measurements cannot be negative, and logs will not be computable.)
         if S0(x,y) <=1 %Skips to next loop if S0 is negative.
             continue;
         end
