@@ -53,16 +53,10 @@ end
 
 %% Calculate coordinate vectors
 
-S = U(:, 1:47);                        % Eigenface space of largest singular values
+S = U(:, 1:47);       % Eigenface space of largest singular values
 
 % Coordinate vectors (Least Squares Solution)
-c_vectors = zeros(47, N);              % Initialising coordinate vector matrix
-
-for i = 1:N
-    LHS = S'*S;
-    RHS = S'*A(:, i);
-    c_vectors(:,i) = LHS \ RHS;
-end
+c_vectors = S'*A;
 
 %% Demonstrate rudimentary moustache detector
 
@@ -73,7 +67,7 @@ end
 % The sample will be the entire face database given (all columns of A i.e. 1000 photos)
 
 % Isolate columns of A corresponding to faces with a moustache
-moustache_level = 1900;                             % Moustache Level
+moustache_level = 2000;                             % Moustache Level
 
 mask = c_vectors(13,:) >= moustache_level;      
 moustache_faces = A(:, mask);
@@ -124,7 +118,7 @@ uniquefaces = A(:,mask2);
 uc_vectors = c_vectors(:, mask2);
 
 % Isolate columns of unique faces matrix corresponding to faces with a moustache
-moustache_level2 = 1900;                                 % Moustache level
+moustache_level2 = 2000;                                 % Moustache level
 
 mask3 = uc_vectors(13,:) >= moustache_level2;
 uf_moustache_faces = uniquefaces(:,mask3);
@@ -179,3 +173,4 @@ fprintf("There are %d unique faces detected with a moustache (Moustache Level = 
 
 % There are two faces with a moustache from the sample of unique faces. From a moustache level standpoint of 1800, 
 % the detector successfully detected 2/2 images of an individual with a moustache giving a perfect accuracy (100%)
+% Optimal moustache level: < 1672.127
