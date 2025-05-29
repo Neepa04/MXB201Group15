@@ -32,6 +32,7 @@ mean_centred = A - mean_face;
 
 % Mean-centred SVD
 [U, Sigma, V] = svd(mean_centred, 'econ');
+Sigma_values = diag(Sigma);
 
 %% Visualise first 20 eigenfaces
 
@@ -53,7 +54,27 @@ end
 
 %% Calculate coordinate vectors
 
+% Since the singular values deplete by a magnitude of 1 from the 47th to
+% the 48th singular value, the orthogonal matrix of U is truncated to 47
+% columns.
+
+% Truncating U with the most significant singular values
 S = U(:, 1:47);       % Eigenface space of largest singular values
+
+% Visualising singular values 
+SV = 47;              % Chosen singular value
+
+figure
+hold on
+plot(Sigma_values, '.', 'MarkerSize', 10)
+plot(SV, Sigma_values(SV), 'r.', 'MarkerSize', 20);
+title('Singular Values of Mean-Centred SVD')
+xlabel('nth Singular Value'), ylabel('Singular Value Magnitude')
+xlim([1 450])
+
+text(SV + 10, Sigma_values(SV) + 5000, sprintf('[%d, %.2f]', SV, Sigma_values(SV)), ...
+    'Color', [0.5 0 0], 'FontSize', 10)
+
 
 % Coordinate vectors (Least Squares Solution)
 c_vectors = S'*A;
@@ -118,7 +139,7 @@ uniquefaces = A(:,mask2);
 c_vectors2 = c_vectors(:, mask2);
 
 % Isolate columns of unique faces matrix corresponding to faces with a moustache
-moustache_level2 = 2000;                                 % Moustache level
+moustache_level2 = 1200;                                 % Moustache level
 
 mask3 = c_vectors2(13,:) >= moustache_level2;
 moustache_faces2 = uniquefaces(:,mask3);
@@ -171,6 +192,35 @@ end
 fprintf("There are %d unique faces detected with a moustache (Moustache Level = %d).\n", ...
     moustache_faces_cols2, moustache_level2)
 
-% There are two faces with a moustache from the sample of unique faces. From a moustache level standpoint of 1800, 
-% the detector successfully detected 2/2 images of an individual with a moustache giving a perfect accuracy (100%)
-% Optimal moustache level: < 1672.127
+
+% ACCURACY %
+
+% The accuracy of the detector is determined by using True Positive (TP), True Negative (TN),
+% False Positive (FP), and False Negative (FN) values into the accuracy formula:
+
+% Accuracy = TP + TN / (TP + TN + FP + FN).     (EvidentlyAI, 2025)
+
+% There are 2 faces with a moustache in the sample of 35 unique faces
+% General TP, TN, FP and FN values for any moustache level
+
+% Iniitialising true moustache position
+groundtruth = [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];  
+
+TP = sum((groundtruth == 1) & (mask3 == 1));
+TN = sum((groundtruth == 0) & (mask3 == 0)); 
+FP = sum((groundtruth == 0) & (mask3 == 1));
+FN = sum((groundtruth == 1) & (mask3 == 0));
+
+% Thus, 
+Accuracy = (TP + TN) / (TP + TN + FP + FN);
+fprintf("Unique Faces Sample Accuracy: %.2f%% \n", Accuracy * 100)
+
+% However, it is important to check the reliability of the computed accuracy as it may be undermined 
+% by the imbalance in the sample, where unique faces without a moustache significantly outnumber those
+% with a moustache. Since FP and FN = 0, the accuracy of 100% on the sample is deemed reliable.
+
+% Therefore, from a moustache level standpoint of 1800, the accuracy of the moustache detector on a sample of 
+% 35 unique faces is flawless at a 100% accuracy. *HOWEVER*, this accuracy is specific to the sample used, and
+% may not generalise to larger or differently composed datasets.
+
+% Optimal moustache level: < #      plan: plot accuracy vs moustache level
