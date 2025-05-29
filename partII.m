@@ -115,14 +115,14 @@ mask2 = 1:29:1000;
 uniquefaces = A(:,mask2);      
 
 % Coordinate vectors of each unique face
-uc_vectors = c_vectors(:, mask2);
+c_vectors2 = c_vectors(:, mask2);
 
 % Isolate columns of unique faces matrix corresponding to faces with a moustache
 moustache_level2 = 2000;                                 % Moustache level
 
-mask3 = uc_vectors(13,:) >= moustache_level2;
-uf_moustache_faces = uniquefaces(:,mask3);
-uf_moustache_faces_cols = size(uf_moustache_faces, 2);   % Number of detected moustache faces (columns)   
+mask3 = c_vectors2(13,:) >= moustache_level2;
+moustache_faces2 = uniquefaces(:,mask3);
+moustache_faces_cols2 = size(moustache_faces2, 2);   % Number of detected moustache faces (columns)   
 
 
 % Visualising unique faces with a moustache (Yes or No)
@@ -146,12 +146,12 @@ end
 
 
 % Visualising unique faces with detected moustache
-uf_moustache_faces_vis = reshape(uf_moustache_faces, rows, cols, uf_moustache_faces_cols);
+moustache_faces_vis2 = reshape(moustache_faces2, rows, cols, moustache_faces_cols2);
 
 % Producing an approximate square tiled layout for any moustache level
-layout = round(sqrt(uf_moustache_faces_cols));
+layout = round(sqrt(moustache_faces_cols2));
 
-if layout^2 < uf_moustache_faces_cols
+if layout^2 < moustache_faces_cols2
     layout2 = layout + 1;
 else
     layout2 = layout;
@@ -161,15 +161,15 @@ figure
 tiledlayout(layout, layout2, "Padding","Compact")
 sgtitle('Unique Faces: Faces Detected Visualisation', 'FontWeight', 'Bold')
 
-for i = 1: uf_moustache_faces_cols
+for i = 1: moustache_faces_cols2
     nexttile
-    imagesc(uf_moustache_faces_vis(:,:, i))
+    imagesc(moustache_faces_vis2(:,:, i))
     colormap('gray')
     axis off
 end
 
 fprintf("There are %d unique faces detected with a moustache (Moustache Level = %d).\n", ...
-    uf_moustache_faces_cols, moustache_level2)
+    moustache_faces_cols2, moustache_level2)
 
 % There are two faces with a moustache from the sample of unique faces. From a moustache level standpoint of 1800, 
 % the detector successfully detected 2/2 images of an individual with a moustache giving a perfect accuracy (100%)
