@@ -21,8 +21,8 @@ for x = 1:X
         if ~mask(x, y), continue; end
         
         % Handling bad data 
-            %S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable.)
-        if S0(x,y) <=1 %Skips to next loop if S0 is negative.
+            % S and S0 measurements should not be negative (measurements cannot be negative and logs will be not computable)
+        if S0(x,y) <=1 % Skips to next loop if S0 is negative.
             continue;
         end
         
@@ -33,7 +33,7 @@ for x = 1:X
         % Solving least squares problem
         B = -log (squeeze(S(x,y,:))./ S0(x,y)) / b; %Find B
 
-        D_vector = A\B; %Use MATLAB \ function to find least squares D vector
+        D_vector = A\B; % Use MATLAB \ function to find least squares D vector
        
         % Forming diffusion tensor
         D = [D_vector(1) D_vector(4) D_vector(5); D_vector(4), D_vector(2), D_vector(6); D_vector(5), D_vector(6), D_vector(3)]; %Arrange D values into 3x3 matrix as per guidelines
