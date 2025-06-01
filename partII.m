@@ -105,7 +105,8 @@ moustache_faces_vis = reshape(moustache_faces, rows, cols, moustache_faces_cols)
 layout = round(sqrt(moustache_faces_cols));
 
 if layout == 0
-    disp("Zero faces detected for all faces sample. Moustache level is too high.")
+    fprintf("Zero faces detected for all faces sample." + ...
+        " Moustache level is too high ( > %.2f).\n", max_level);
     return
 elseif layout^2 < moustache_faces_cols
     layout2 = layout + 1;
@@ -259,8 +260,8 @@ moustache_faces_vis2 = reshape(moustache_faces2, rows, cols, moustache_faces_col
 layout = round(sqrt(moustache_faces_cols2));
 
 if layout == 0
-    fprintfs("Zero faces detected for unqiue faces sample." + ...
-        " Moustache level is too high ( > %.2f )./n", max_level2)
+    fprintf("Zero faces detected for unqiue faces sample." + ...
+        " Moustache level is too high ( > %.2f).\n", max_level2);
     return
 elseif layout^2 < moustache_faces_cols
     layout2 = layout + 1;
