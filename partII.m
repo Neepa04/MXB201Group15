@@ -17,7 +17,7 @@ end
 %% Calculate and visualise mean face
 
 % Calculating mean face
-mean_face = sum(A,2) / size(A, 2);
+mean_face = mean(A, 2);
 
 % Visualising mean face
 figure
@@ -43,11 +43,11 @@ eigenfaces = reshape(U, rows, cols, N);
 figure
 tiledlayout(4, 5, 'Padding','Compact')
 sgtitle('First 20 Eigenfaces', 'FontWeight', 'Bold')
+colormap('gray')
 
 for x = 1:20
     nexttile
     imagesc(eigenfaces(:,:,x));
-    colormap('gray')
     title(num2str(x))
     axis off
 end
@@ -65,24 +65,25 @@ S = U(:, 1:47);       % Eigenface space of largest singular values
 SV = 47;              % Chosen singular value
 
 figure
+title('Singular Values of Mean-Centred SVD')
+
 hold on
 plot(Sigma_values, '.', 'MarkerSize', 10)
 plot(SV, Sigma_values(SV), 'r.', 'MarkerSize', 20);
-title('Singular Values of Mean-Centred SVD')
 xlabel('nth Singular Value'), ylabel('Singular Value Magnitude')
 xlim([1 450])
-
 text(SV + 10, Sigma_values(SV) + 5000, sprintf('[%d, %.2f]', SV, Sigma_values(SV)), ...
     'Color', [0.5 0 0], 'FontSize', 10)
 
 
-% Coordinate vectors (Least Squares Solution)
+% Coordinate vectors
 c_vectors = S'*A;
 
 %% Demonstrate rudimentary moustache detector
 
 % The 13th column of the eigenface space corresponds to the moustache characteristic
-% Therefore, the 13th row of the coordinate vector determines the **moustache level** apparent in the photo
+% Therefore, the 13th row of the coordinate vector determines "how much moustache" is apparent in the photo
+% Thus, must select a moustache level (ϕ) threshold
 % Below moustache level = moustache undetected,   Equal or above moustache level = moustache detected
 
 % The detector will be tested on two samples.
@@ -116,16 +117,16 @@ figure
 colnum_moustacheface = find(mask);          % Column numbers of moustache detected from A
 tiledlayout(layout, layout2, 'Padding', 'Compact', 'TileSpacing', 'Compact')
 sgtitle('All Faces: Faces Detected Visualisation', 'FontWeight', 'Bold')
+colormap('gray')
 
 for i = 1:moustache_faces_cols
     nexttile
     imagesc(moustache_faces_vis(:,:, i))
-    colormap('gray')
     title(['Photo ' num2str(colnum_moustacheface(i))]);
     axis off
 end
 
-fprintf("All Faces: There are %d faces detected with a moustache (Moustache Level = %d).\n", ...
+fprintf("All Faces: There are %d faces detected with a moustache (Moustache Level = %.2f).\n", ...
     moustache_faces_cols, moustache_level)
 
 % ACCURACY %
@@ -140,8 +141,7 @@ fprintf("All Faces: There are %d faces detected with a moustache (Moustache Leve
 
 % Iniitialising true moustache position
 groundtruth = zeros(size(mask));
-groundtruth([233:261 548:576]) = 1;
-groundtruth = logical(groundtruth);
+groundtruth([233:261 548:576]) = 1;         % We know moustache faces are in the columns 233:261 and 548:576
 
 TP = sum((groundtruth == 1) & (mask == 1));
 TN = sum((groundtruth == 0) & (mask == 0)); 
@@ -225,7 +225,7 @@ c_vectors2 = c_vectors(:, mask2);
 
 % Isolate columns of unique faces matrix corresponding to faces with a moustache
 moustache_level = 1847.3;                                % Moustache level (ϕ)
-max_level2 = max(c_vectors2(13,:));                       % Maximum level applicable
+max_level2 = max(c_vectors2(13,:));                      % Maximum level applicable
 
 mask3 = c_vectors2(13,:) >= moustache_level;
 moustache_faces2 = uniquefaces(:,mask3);
@@ -238,11 +238,11 @@ uniquefaces_vis = reshape(uniquefaces, rows, cols, size(uniquefaces, 2));
 figure
 tiledlayout(5, 7, 'Padding', 'Compact', 'TileSpacing', 'Compact')
 sgtitle('Unique Faces: Moustache Detector Results (Yes or No)', 'FontWeight', 'Bold')
+colormap('gray')
 
 for u = 1:size(uniquefaces,2)
     nexttile
     imagesc(uniquefaces_vis(:,:, u))
-    colormap('gray')
     if mask3(u) == 1
         title('Yes', 'Color', [0 0.5 0])
     else
@@ -271,15 +271,15 @@ end
 figure
 tiledlayout(layout, layout2, "Padding","Compact")
 sgtitle('Unique Faces: Faces Detected Visualisation', 'FontWeight', 'Bold')
+colormap('gray')
 
 for i = 1: moustache_faces_cols2
     nexttile
     imagesc(moustache_faces_vis2(:,:, i))
-    colormap('gray')
     axis off
 end
 
-fprintf("Unique faces: There are %d faces detected with a moustache (Moustache Level = %d).\n", ...
+fprintf("Unique faces: There are %d faces detected with a moustache (Moustache Level = %.2f).\n", ...
     moustache_faces_cols2, moustache_level)
 
 
@@ -294,7 +294,8 @@ fprintf("Unique faces: There are %d faces detected with a moustache (Moustache L
 % General TP, TN, FP and FN values for any moustache level
 
 % Iniitialising true moustache position
-groundtruth = [0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];  
+groundtruth = zeros(size(mask2));
+groundtruth(:,[9 20]) = 1;                      % We know moustache faces are in the columns 9 and 20
 groundtruth = logical(groundtruth);
 
 TP = sum((groundtruth == 1) & (mask3 == 1));
